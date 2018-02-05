@@ -1,10 +1,11 @@
 package de.hsw.sample;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Rational {
 
-	private static Logger LOG = Logger.getLogger(Rational.class); 
+	private static Logger LOG = LoggerFactory.getLogger(Rational.class);
 	
 	private int numerator;
 	private int denominator;
@@ -16,10 +17,10 @@ public class Rational {
 	}
 	
 	public Rational(int numerator, int denominator){
-		LOG.info("Rational created");
 		this.numerator = numerator;
 		this.denominator = denominator;
 		this.reduce();
+		LOG.info("{} created from {}/{}", this, numerator, denominator);
 	}
 	
 	public Rational(Rational rational){
@@ -27,6 +28,7 @@ public class Rational {
 	}
 	
 	public Rational add(Rational summand){
+		LOG.info("summand {} to {}", summand, this);
 		return new Rational(
 			(this.numerator * summand.denominator) + (summand.numerator * this.denominator),
 			this.denominator * summand.denominator
@@ -34,8 +36,7 @@ public class Rational {
 	}
 	
 	public Rational multiply(Rational factor){
-		LOG.info(this.numerator * factor.numerator);
-		LOG.info(this.denominator * factor.denominator);
+		LOG.info("multiply {} with {}", this, factor);
 		return new Rational(
 			this.numerator * factor.numerator,
 			this.denominator * factor.denominator
@@ -55,6 +56,19 @@ public class Rational {
 			return euclid(b, a % b);
 		}
 	}
+	
+	
+	@Override
+	public String toString() {
+		StringBuffer sb = new StringBuffer("Rational {")
+				.append(this.numerator);
+		if(this.denominator != 1) {
+			sb.append("/").append(this.denominator);
+		}
+		sb.append("}");
+		return sb.toString();
+	}
+	
 	
 	public boolean equals(Object object){
 		if(!(object instanceof Rational)){
